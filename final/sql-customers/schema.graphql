@@ -1,9 +1,13 @@
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@requires", "@external", "@tag"])
+  @link(url: "https://specs.apollo.dev/federation/v2.8", import: ["@key", "@requires", "@external", "@tag", "@shareable"])
 
 type Query {
   users: [User]
   user(id: ID!): User
+  """
+  Finds a user by their full name (first and last name, e.g. "Jane Doe"). Returns the first match, or null if none.
+  """
+  userByName(fullName: String!): User
 }
 
 """
@@ -15,8 +19,8 @@ type User @key(fields: "id") {
   firstName: String @tag(name: "private")
   lastName: String @tag(name: "private")
   address: String @tag(name: "private")
-  phone: String @tag(name: "private")
-  email: String! @tag(name: "private")
+  phone: String @tag(name: "private") @shareable
+  email: String! @tag(name: "private") @shareable
 
   """
   The user's active cart session. Once the cart items have been purchases, they transition to an Order
@@ -27,6 +31,8 @@ type User @key(fields: "id") {
   The users previous purchases
   """
   orders(filters: OrderFilters): [Order]
+
+  paymentMethods: [PaymentMethod]
 }
 
 """
@@ -61,4 +67,9 @@ type Order @key(fields: "id", resolvable: false) {
 type ProductVariant @key(fields: "id", resolvable: false) {
   id: ID!
   price: Float! @external
+}
+
+type PaymentMethod {
+  id: ID!
+  cardNumber: String!
 }

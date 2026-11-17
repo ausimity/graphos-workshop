@@ -6,6 +6,9 @@ module.exports = {
     },
     user(_, { id }, { dataSources }) {
       return dataSources.customerDB.getCustomer(id);
+    },
+    userByName(_, { fullName }, { dataSources }) {
+      return dataSources.customerDB.getCustomerByName(fullName);
     }
   }
 };

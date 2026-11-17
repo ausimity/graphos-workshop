@@ -43,8 +43,8 @@ async function main() {
   );
 
   const server = new ApolloServer({
-    schema: buildSubgraphSchema({ typeDefs, resolvers }),
-    instrospection: true
+    schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
+    introspection: false
   });
 
   const { url } = await startStandaloneServer(server, {
